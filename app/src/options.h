@@ -28,6 +28,7 @@ enum sc_record_format {
     SC_RECORD_FORMAT_AAC,
     SC_RECORD_FORMAT_FLAC,
     SC_RECORD_FORMAT_WAV,
+    SC_RECORD_FORMAT_FLV,
 };
 
 static inline bool

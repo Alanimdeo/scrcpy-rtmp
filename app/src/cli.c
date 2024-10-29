@@ -724,7 +724,7 @@ static const struct sc_option options[] = {
         .longopt_id = OPT_RECORD_FORMAT,
         .longopt = "record-format",
         .argdesc = "format",
-        .text = "Force recording format (mp4, mkv, m4a, mka, opus, aac, flac "
+        .text = "Force recording format (mp4, mkv, m4a, mka, flv, opus, aac, flac "
                 "or wav).",
     },
     {
@@ -1840,6 +1840,9 @@ get_record_format(const char *name) {
     if (!strcmp(name, "wav")) {
         return SC_RECORD_FORMAT_WAV;
     }
+    if (!strcmp(name, "flv")) {
+        return SC_RECORD_FORMAT_FLV;
+    }
     return 0;
 }
 
@@ -1848,7 +1851,7 @@ parse_record_format(const char *optarg, enum sc_record_format *format) {
     enum sc_record_format fmt = get_record_format(optarg);
     if (!fmt) {
         LOGE("Unsupported record format: %s (expected mp4, mkv, m4a, mka, "
-             "opus, aac, flac or wav)", optarg);
+             "flv, opus, aac, flac or wav)", optarg);
         return false;
     }
 
@@ -1873,6 +1876,10 @@ parse_port(const char *optarg, uint16_t *port) {
 
 static enum sc_record_format
 guess_record_format(const char *filename) {
+    if (strncmp(filename, "rtmp://", 7) == 0) {
+        return SC_RECORD_FORMAT_FLV;
+    }
+
     const char *dot = strrchr(filename, '.');
     if (!dot) {
         return 0;

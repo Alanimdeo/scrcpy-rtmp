@@ -74,6 +74,8 @@ sc_recorder_get_format_name(enum sc_record_format format) {
             return "flac";
         case SC_RECORD_FORMAT_WAV:
             return "wav";
+        case SC_RECORD_FORMAT_FLV:
+            return "flv";
         default:
             return NULL;
     }
@@ -137,6 +139,8 @@ sc_recorder_open_output_file(struct sc_recorder *recorder) {
         return false;
     }
 
+    const char *record_type = strncmp(recorder->filename, "rtmp://", 7) == 0 ? "stream" : "file";
+
     recorder->ctx = avformat_alloc_context();
     if (!recorder->ctx) {
         LOG_OOM();
@@ -146,7 +150,7 @@ sc_recorder_open_output_file(struct sc_recorder *recorder) {
     int ret = avio_open(&recorder->ctx->pb, recorder->filename,
                         AVIO_FLAG_WRITE);
     if (ret < 0) {
-        LOGE("Failed to open output file: %s", recorder->filename);
+        LOGE("Failed to open output %s: %s", record_type, recorder->filename);
         avformat_free_context(recorder->ctx);
         return false;
     }
@@ -160,7 +164,7 @@ sc_recorder_open_output_file(struct sc_recorder *recorder) {
     av_dict_set(&recorder->ctx->metadata, "comment",
                 "Recorded by scrcpy " SCRCPY_VERSION, 0);
 
-    LOGI("Recording started to %s file: %s", format_name, recorder->filename);
+    LOGI("Recording started to %s %s: %s", format_name, record_type, recorder->filename);
     return true;
 }
 
