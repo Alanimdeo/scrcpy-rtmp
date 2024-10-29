@@ -1,3 +1,9 @@
+# Note specific to scrcpy-rtmp
+
+There is no prebuilt release for this fork. [You will need to build it yourself.](doc/build.md)
+The instructions are the same as the original scrcpy,
+but you will need to clone this repository instead of the original one.
+
 **This GitHub repo (<https://github.com/Genymobile/scrcpy>) is the only official
 source for the project. Do not download releases from random websites, even if
 their name contains `scrcpy`.**
